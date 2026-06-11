@@ -15,8 +15,10 @@ export async function POST(req: NextRequest) {
       [name, phone, address, quantity || 1, notes || '']
     );
 
-    return NextResponse.json({ id: result.lastInsertRowid, success: true });
+    const id = typeof result.lastInsertRowid === 'bigint' ? Number(result.lastInsertRowid) : result.lastInsertRowid;
+    return NextResponse.json({ id, success: true });
   } catch (error) {
+    console.error('Order API error:', error);
     return NextResponse.json({ error: 'فشل في إرسال الطلب' }, { status: 500 });
   }
 }
